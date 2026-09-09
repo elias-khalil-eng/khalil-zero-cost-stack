@@ -9,8 +9,8 @@
 
 [functions]
   node_bundler = "esbuild"
-  # The Word certificate template must ship alongside the bundled function.
-  included_files = ["templates/certificate-template.docx"]
+  # A document template must ship alongside the bundled function.
+  included_files = ["templates/document-template.docx"]
 
 # Fallback in case the function's own `config.path` route is unavailable
 # (e.g. older CLI versions in local dev).

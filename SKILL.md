@@ -7,7 +7,7 @@ description: "Use when building or extending an internal business/operations app
 
 ## Overview
 
-One architecture: **React SPA + ONE serverless function + a spreadsheet as the database**, all on one origin, on a free host. Reference implementation: `lamiss-online` (bridal rental shop — reservations, payments, expenses, certificates, roles, bride links).
+One architecture: **React SPA + ONE serverless function + a spreadsheet as the database**, all on one origin, on a free host. Proven in production: records, payments, expenses, generated documents, role separation and public one-time client links.
 
 **Core principle:** the spreadsheet is a real database with real rules. Break the four invariants below and it corrupts quietly.
 

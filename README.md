@@ -2,7 +2,7 @@
 
 A Claude Code / Agent Skill for building internal business apps on **$0/month hosting**: a React SPA, ONE serverless function, and a spreadsheet as the database.
 
-Extracted from a production bridal-rental operations app (reservations, payments, expenses, roles, Word certificates, public one-time client links) running on Netlify + Google Sheets.
+Extracted from a production internal operations app — records, payments, expenses, roles, generated Word documents and public one-time client links — running on Netlify + Google Sheets.
 
 ## Install
 

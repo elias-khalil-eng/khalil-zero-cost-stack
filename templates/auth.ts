@@ -79,8 +79,9 @@ export function requireAdmin(user: AuthUser): void {
   }
 }
 
-export function isSeamstress(user: AuthUser): boolean {
-  return user.roles.includes('Seamstress')
+/** Restricted roles: pair this with a path deny-list in the router. */
+export function hasRole(user: AuthUser, role: string): boolean {
+  return user.roles.includes(role)
 }
 
 function validatePassword(password: string | null | undefined): string {

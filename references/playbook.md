@@ -1,7 +1,7 @@
 # The Zero-Cost Business App Playbook
 
 A reusable technology plan for building small business applications with **no
-database, no server and no monthly bill** — extracted from the LA MISS DE PARIS
+database, no server and no monthly bill** — extracted from a production
 build and written so it can be applied to a completely different application.
 
 **The pattern in one sentence:** a React single-page app and one serverless
@@ -14,8 +14,8 @@ copy into a second account so the data outlives the account that holds it.
 > **PORT** is code to copy almost unchanged; everything marked **DECIDE** is a
 > choice you make per project.
 
-The reference implementation for every pattern here is `lamiss-online/`, and
-`docs/ARCHITECTURE.md` documents that specific app. This file documents the
+The reference implementation for every pattern here is a production app of this
+shape, documented in its own `docs/ARCHITECTURE.md`. This file documents the
 *method*.
 
 ---
@@ -319,7 +319,7 @@ lives in `lib/` and is testable without HTTP.
 
 | Layer | May know about | Must never know about |
 |---|---|---|
-| `lib/sheets.ts` | The store's API, tabs, rows, cells | Reservations, invoices, any domain noun |
+| `lib/sheets.ts` | The store's API, tabs, rows, cells | Bookings, invoices, any domain noun |
 | `lib/stores.ts` | Domain rules, `sheets.ts` primitives | HTTP, `Request`, status codes (it throws typed errors instead) |
 | `netlify/functions/api.ts` | HTTP, roles, routing, `stores.ts` | How anything is stored |
 | `client/src/lib/api.ts` | Endpoints, the token, error shape | The store, the domain rules |
@@ -1477,8 +1477,7 @@ EXIT      stores.ts is the seam — rewrite one file, keep the sheet as a
 
 ---
 
-*Extracted from the LA MISS DE PARIS build. The reference implementation of every
-pattern here is `lamiss-online/`; that specific app is documented in
-`docs/ARCHITECTURE.md`. Where this playbook and the reference implementation
+*Extracted from a production build. The reference implementation of every
+pattern here is that app, documented in its own `docs/ARCHITECTURE.md`. Where this playbook and the reference implementation
 disagree, **this playbook is the corrected version** — §14 and §19 in particular
 include fixes the reference app has not yet applied.*

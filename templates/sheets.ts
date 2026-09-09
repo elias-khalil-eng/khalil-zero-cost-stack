@@ -12,15 +12,18 @@ const SCOPE = 'https://www.googleapis.com/auth/spreadsheets'
 export const TABS = {
   // Columns are read by POSITION (see readTable), so new ones only ever get
   // appended — inserting mid-list would shift every existing row's data.
-  Reservations: ['Id', 'CreatedAtUtc', 'FullName', 'Phone', 'WeddingDate', 'WeddingLocation', 'BrideArea', 'DressName', 'DressPrice', 'VeilName', 'Notes', 'ReceiptDate', 'ReturnDate', 'Insurance', 'ImportedSheetRow', 'JuponCode', 'DeletedAtUtc', 'ClientDraftId', 'SleevesPrice', 'GlovesPrice', 'AccessoriesPrice'],
-  Payments: ['Id', 'ReservationId', 'Amount', 'Method', 'ReceiptNumber', 'PaidOn', 'Notes', 'CreatedAtUtc'],
+  // Replace these with your own entities. The shapes show the conventions:
+  // Id first, CreatedAtUtc for audit, DeletedAtUtc last for soft delete.
+  Records: ['Id', 'CreatedAtUtc', 'FullName', 'Phone', 'StartDate', 'EndDate', 'Location', 'ItemName', 'ItemPrice', 'Notes', 'Deposit', 'ImportedSheetRow', 'DeletedAtUtc', 'ClientDraftId'],
+  Payments: ['Id', 'RecordId', 'Amount', 'Method', 'ReceiptNumber', 'PaidOn', 'Notes', 'CreatedAtUtc'],
   Expenses: ['Id', 'Year', 'Month', 'Category', 'Amount', 'Notes', 'UpdatedAtUtc'],
   ExpenseCategories: ['Id', 'Name', 'SortOrder'],
   Catalog: ['Id', 'Type', 'Name'],
   Users: ['Username', 'PasswordHash', 'Role', 'IsDisabled', 'CreatedAtUtc'],
-  ClientDrafts: ['Id', 'Status', 'ValuesJson', 'EditableFieldsJson', 'SubmittedValuesJson', 'TokenHash', 'CreatedAtUtc', 'UpdatedAtUtc', 'ExpiresAtUtc', 'SubmittedAtUtc', 'DecidedAtUtc', 'DecidedBy', 'RejectionReason', 'ReservationId', 'Version', 'SubmittedVersion', 'DeletedAtUtc'],
-  // One row per reservation; measurement columns follow MEASUREMENT_FIELDS order (measurement-rules.ts).
-  Measurements: ['Id', 'ReservationId', 'Neck', 'Bust', 'UnderBust', 'Waist', 'Hips', 'ArmCircumference', 'Wrist', 'ShoulderWidth', 'ShoulderToBust', 'FrontLength', 'ShoulderToWaist', 'BackLength', 'WaistToHip', 'ArmLength', 'SkirtLength', 'Height', 'HeelHeight', 'Notes', 'UpdatedBy', 'UpdatedAtUtc'],
+  ClientDrafts: ['Id', 'Status', 'ValuesJson', 'EditableFieldsJson', 'SubmittedValuesJson', 'TokenHash', 'CreatedAtUtc', 'UpdatedAtUtc', 'ExpiresAtUtc', 'SubmittedAtUtc', 'DecidedAtUtc', 'DecidedBy', 'RejectionReason', 'RecordId', 'Version', 'SubmittedVersion', 'DeletedAtUtc'],
+  // Child table: one row per Record. Keep its column order fixed and documented
+  // in one place, so the domain module and this schema can never drift apart.
+  RecordDetails: ['Id', 'RecordId', 'FieldA', 'FieldB', 'FieldC', 'Notes', 'UpdatedBy', 'UpdatedAtUtc'],
 } as const
 
 export type TabName = keyof typeof TABS
@@ -345,7 +348,7 @@ export type CellUpdate = {
 /**
  * Writes selected cells in one atomic spreadsheets.batchUpdate call. Unlike
  * updateRow, this never replaces neighboring cells, so a client approval can't
- * roll back an owner's unrelated reservation edits made after the link was sent.
+ * roll back an owner's unrelated record edits made after the link was sent.
  */
 export async function updateCells(updates: CellUpdate[]): Promise<void> {
   if (updates.length === 0) return

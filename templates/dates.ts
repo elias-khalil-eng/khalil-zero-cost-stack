@@ -96,7 +96,7 @@ export function formatTimestamp(isoDateTime: string): string {
   return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`
 }
 
-/** Formats an ISO date as dd/MM/yyyy for certificates; empty string when unparseable. */
+/** Formats an ISO date as dd/MM/yyyy for generated documents; empty string when unparseable. */
 export function formatDateSlash(raw?: string | null): string {
   const iso = parseDateLoose(raw)
   if (!iso) return ''
