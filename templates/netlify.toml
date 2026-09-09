@@ -1,0 +1,26 @@
+# Frontend build: the API and the site share one origin, so the client only
+# needs VITE_API_BASE_URL when served from a custom domain (see README).
+[build]
+  command = "npm ci && npm --prefix client ci && VITE_API_BASE_URL=$URL npm --prefix client run build"
+  publish = "client/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[functions]
+  node_bundler = "esbuild"
+  # The Word certificate template must ship alongside the bundled function.
+  included_files = ["templates/certificate-template.docx"]
+
+# Fallback in case the function's own `config.path` route is unavailable
+# (e.g. older CLI versions in local dev).
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# SPA fallback — must stay last.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
